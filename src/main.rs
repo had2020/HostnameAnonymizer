@@ -1,7 +1,8 @@
-use std::process;
+use std::os::unix::process;
+use std::process::Command;
 
 #[derive(PartialEq, Debug)]
-enum OS {
+pub enum OS {
     Windows, // Can't help you G.
     Macos,   // My Target
     Linux,   // WIP
@@ -18,11 +19,16 @@ fn main() {
     #[cfg(not(any(target_os = "windows", target_os = "macos", target_os = "linux")))]
     let os = OS::Unknown;
 
-    if os == OS::Macos || os == OS::Linux {
+    if os == OS::Macos {
         println!("Using OS settings for {:?}", os);
+        Command::new("sh")
+            .arg("-c")
+            .arg(r#"sudo scutil --set HostName "NewHostName""#)
+            .output()
+            .expect("failed to execute process");
     } else {
         println!("Running on an unknown or windows OS. Can't find proper OS commands.");
-        process::exit(1);
+        std::process::exit(1);
     }
 
     println!("Changing LocalHostName name");
