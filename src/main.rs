@@ -1,5 +1,5 @@
-use std::os::unix::process;
 use std::process::Command;
+use std::{env, string};
 
 #[derive(PartialEq, Debug)]
 pub enum OS {
@@ -10,6 +10,7 @@ pub enum OS {
 }
 
 fn main() {
+    let args: Vec<String> = env::args().collect();
     #[cfg(target_os = "windows")]
     let os = OS::Windows;
     #[cfg(target_os = "macos")]
@@ -21,11 +22,23 @@ fn main() {
 
     if os == OS::Macos {
         println!("Using OS settings for {:?}", os);
+        if args.len() == 1 {
+            match args[0] {
+                format!("") => {}
+                _ => {
+                    println!(r#"Invaid Arg try "--help"#)
+                }
+            }
+        } else {
+            println!(r#"Requires Args, try "--help""#)
+        }
+        /*
         Command::new("sh")
             .arg("-c")
             .arg(r#"sudo scutil --set HostName "NewHostName""#)
             .output()
             .expect("failed to execute process");
+        */
     } else {
         println!("Running on an unknown or windows OS. Can't find proper OS commands.");
         std::process::exit(1);
