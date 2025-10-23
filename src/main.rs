@@ -50,7 +50,7 @@ fn main() {
                     thread::spawn(move || {
                         println!("1");
                         println!("2");
-                        Command::new("sh")
+                        let output = Command::new("sh")
                             .arg("-c")
                             .arg(format!(
                                 "networksetup -setairportnetwork {} {} p",
@@ -58,6 +58,16 @@ fn main() {
                             ))
                             .output()
                             .expect("failed to execute process");
+
+                        if output.status.success() {
+                            println!("Connected successfully!");
+                        } else {
+                            eprintln!(
+                                "Failed to connect. Exit code: {:?}\nStderr: {}",
+                                output.status.code(),
+                                String::from_utf8_lossy(&output.stderr)
+                            );
+                        }
                         // networksetup -getinfo Wi-Fi
                         //c.store(true, Ordering::Relaxed);
                     });
