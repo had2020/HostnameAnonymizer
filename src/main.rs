@@ -1,5 +1,11 @@
 use std::env;
 use std::process::Command;
+use std::sync::{
+    Arc,
+    atomic::{AtomicBool, Ordering},
+};
+use std::thread;
+use std::time::Instant;
 
 #[derive(PartialEq, Debug)]
 pub enum OS {
@@ -35,6 +41,31 @@ fn main() {
                 println!("List all commands");
                 println!("  --help")
             } else if args[1] == String::from("breach") {
+                let cracked = Arc::new(AtomicBool::new(false));
+                let c = cracked.clone();
+
+                while !cracked.load(Ordering::Relaxed) {
+                    //std::thread::yield_now();
+                    let value = args.clone();
+                    thread::spawn(move || {
+                        println!("1");
+                        println!("2");
+                        Command::new("sh")
+                            .arg("-c")
+                            .arg(format!(
+                                "networksetup -setairportnetwork {} {} p",
+                                value[2], value[3]
+                            ))
+                            .output()
+                            .expect("failed to execute process");
+                        // networksetup -getinfo Wi-Fi
+                        //c.store(true, Ordering::Relaxed);
+                    });
+                }
+
+                println!("Cracked = {}", cracked.load(Ordering::Relaxed));
+
+                /*
                 Command::new("sh")
                     .arg("-c")
                     .arg(format!(
@@ -43,6 +74,7 @@ fn main() {
                     ))
                     .output()
                     .expect("failed to execute process");
+                */
             } else {
                 println!(r#"Invaid Arg try "help"#);
             }
