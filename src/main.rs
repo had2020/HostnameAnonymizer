@@ -1,10 +1,10 @@
+use std::env;
 use std::process::Command;
-use std::{env, string};
 
 #[derive(PartialEq, Debug)]
 pub enum OS {
     Windows, // Can't help you G.
-    Macos,   // My Target
+    Macos,   // My Target interface likely en0
     Linux,   // WIP
     Unknown,
 }
@@ -21,16 +21,33 @@ fn main() {
     let os = OS::Unknown;
 
     if os == OS::Macos {
-        println!("Using OS settings for {:?}", os);
-        if args.len() == 1 {
-            match args[0] {
-                format!("") => {}
-                _ => {
-                    println!(r#"Invaid Arg try "--help"#)
-                }
+        println!("{:?}", args);
+        if args.len() > 1 {
+            if args[1] == String::from("breacher") {
+            } else if args[1] == String::from("help") {
+                println!("*Finding your wifi interface*");
+                println!(r#"    networksetup -listallhardwareports"#);
+                println!("And get your interface on your wifi device for the interface arg.");
+                println!(" ");
+                println!("Network breach testing:");
+                println!("  breach device_interface ssid");
+                println!(" ");
+                println!("List all commands");
+                println!("  --help")
+            } else if args[1] == String::from("breach") {
+                Command::new("sh")
+                    .arg("-c")
+                    .arg(format!(
+                        "networksetup -setairportnetwork {} {} p",
+                        args[2], args[3]
+                    ))
+                    .output()
+                    .expect("failed to execute process");
+            } else {
+                println!(r#"Invaid Arg try "help"#);
             }
         } else {
-            println!(r#"Requires Args, try "--help""#)
+            println!(r#"Requires Args, try "help""#)
         }
         /*
         Command::new("sh")
@@ -43,6 +60,4 @@ fn main() {
         println!("Running on an unknown or windows OS. Can't find proper OS commands.");
         std::process::exit(1);
     }
-
-    println!("Changing LocalHostName name");
 }
