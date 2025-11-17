@@ -33,6 +33,6 @@ fn main() {
             .expect("failed to execute process");
 
         println!("New hostname: {}", new_hostname);
-        thread::sleep(Duration::from_mins(seconds));
+        thread::sleep(Duration::from_secs(seconds));
     }
 }
