@@ -1,10 +1,23 @@
 use std::time::Duration;
 use std::process::Command;
-use std::time::Instant;
 use rand::Rng;
 use std::thread;
+use std::env;
 
 fn main() {
+    let args: Vec<String> = env::args().collect();
+    
+    let mut seconds = 240;
+    if args.len() < 0 {
+        seconds = args[0].parse().unwrap();
+    }
+
+    Command::new("sh")
+        .arg("-c")
+        .arg(format!("sudo -i"))
+        .output()
+        .expect("failed to execute process");
+
     loop {
         let mut rng = rand::rng();
         let mut new_hostname = String::new();
@@ -15,11 +28,11 @@ fn main() {
 
         Command::new("sh")
             .arg("-c")
-            .arg(format!("sudo hostname {}", &new_hostname.clone()))
+            .arg(format!("hostname {}", &new_hostname.clone()))
             .output()
             .expect("failed to execute process");
 
         println!("New hostname: {}", new_hostname);
-        thread::sleep(Duration::from_mins(2));
+        thread::sleep(Duration::from_mins(seconds));
     }
 }
