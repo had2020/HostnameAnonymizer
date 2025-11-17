@@ -5,7 +5,7 @@ use rand::Rng;
 use std::thread;
 
 fn main() {
-    while true {
+    loop {
         let mut rng = rand::rng();
         let mut new_hostname = String::new();
         for _ in 0..rng.random_range(1..=50) {
@@ -20,6 +20,6 @@ fn main() {
             .expect("failed to execute process");
 
         println!("New hostname: {}", new_hostname);
-        thread::sleep(Duration::from_secs(120));
+        thread::sleep(Duration::from_mins(2));
     }
 }
