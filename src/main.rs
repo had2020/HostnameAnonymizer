@@ -8,7 +8,7 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     
     let mut seconds = 240;
-    if args.len() < 0 {
+    if args.len() != 0 {
         seconds = args[0].parse().unwrap();
     }
 
