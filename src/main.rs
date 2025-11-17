@@ -8,8 +8,8 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     
     let mut seconds = 240;
-    if args.len() != 0 {
-        seconds = args[0].parse().unwrap();
+    if args.len() > 1 {
+        seconds = args[1].parse().expect(&format!("{} is not a number!", args[1]));
     }
 
     Command::new("sh")
