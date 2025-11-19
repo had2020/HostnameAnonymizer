@@ -1,15 +1,17 @@
-use std::time::Duration;
-use std::process::Command;
 use rand::Rng;
-use std::thread;
 use std::env;
+use std::process::Command;
+use std::thread;
+use std::time::Duration;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    
+
     let mut seconds = 240;
     if args.len() > 1 {
-        seconds = args[1].parse().expect(&format!("{} is not a number!", args[1]));
+        seconds = args[1]
+            .parse()
+            .expect(&format!("{} is not a number!", args[1]));
     }
 
     Command::new("sh")
@@ -32,7 +34,14 @@ fn main() {
             .output()
             .expect("failed to execute process");
 
+        Command::new("sh")
+            .arg("-c")
+            .arg("sh mac.sh")
+            .output()
+            .expect("failed to execute process");
+
         println!("New hostname: {}", new_hostname);
+        println!("New Mac Address");
         thread::sleep(Duration::from_secs(seconds));
     }
 }
